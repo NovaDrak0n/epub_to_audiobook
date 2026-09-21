@@ -1,7 +1,9 @@
 services:
   kokoro:
     image: ghcr.io/remsky/kokoro-fastapi-cpu
-    #image: ghcr.io/remsky/kokoro-fastapi-gpu # Uncomment this line if you have a GPU and want to use it
+    #image: ghcr.io/remsky/kokoro-fastapi-gpu # Uncomment this line if you have a NVIDIA GTX 900-series through RTX 40 gpu and want to use it
+    #image: ghcr.io/remsky/kokoro-fastapi-gpu:latest-cu128 # Uncomment this line if you have a NVIDIA RTX 50-series / Blackwell gpu and want to use it
+    #image: ghcr.io/remsky/kokoro-fastapi-rocm:latest # Uncomment this line if you have a AMD gpu and want to use it (Warning! experimental, x86_64 only)
     container_name: kokoro
     environment: #comment this section out if you are using the GPU image
       # ONNX Optimization Settings for vectorized operations
@@ -15,6 +17,11 @@ services:
     #   - PYTHONPATH=/app:/app/api
     #   - USE_GPU=true
     #   - PYTHONUNBUFFERED=1
+    # environment: #uncomment this section if you are using the ROCm image
+    #   - PYTHONPATH=/app:/app/api
+    #   - USE_GPU=true
+    #   - PYTHONUNBUFFERED=1
+    #   - TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1
     ports:
       - 8880:8880
     healthcheck:
@@ -22,7 +29,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-#    deploy: #uncomment this section if you are using the GPU image
+#    deploy: #uncomment this section if you are using the GPU image(not ROCm)
 #      resources:
 #        reservations:
 #          devices:
